@@ -1,0 +1,10 @@
+{
+    "name": "email-test",
+    "version-string": "0.1.0-dev",
+    "maintainers": [
+        "Particle_G <particle_g@outlook.com>"
+    ],
+    "dependencies": [
+        "mailio"
+    ]
+}
