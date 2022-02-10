@@ -23,3 +23,6 @@ elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
 endif ()
 
 add_executable(${PROJECT_NAME} main.cpp)
+
+find_package(mailio CONFIG REQUIRED)
+target_link_libraries(${PROJECT_NAME} PRIVATE mailio)
