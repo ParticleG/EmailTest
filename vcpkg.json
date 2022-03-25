@@ -5,6 +5,7 @@
         "Particle_G <particle_g@outlook.com>"
     ],
     "dependencies": [
+        "openssl",
         "mailio"
     ]
 }

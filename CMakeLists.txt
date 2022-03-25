@@ -1,5 +1,7 @@
 cmake_minimum_required(VERSION 3.21)
 
+include(utils.cmake)
+
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
@@ -18,11 +20,31 @@ elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Intel")
     message(STATUS "Compiler is Intel C++")
 elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
     message(STATUS "Compiler is Visual Studio C++")
+    get_WIN32_WINNT(WIN32_WINNT)
     add_compile_options(/MP /utf-8)
-    add_compile_definitions(_CRT_SECURE_NO_WARNINGS NOMINMAX)
+    add_compile_definitions(_CRT_SECURE_NO_WARNINGS NOMINMAX _WIN32_WINNT=${WIN32_WINNT})
 endif ()
+
+find_package(OpenSSL REQUIRED)
+find_mailIO(MAILIO_INCLUDE_DIR MAILIO_LIB)
+
+message(STATUS "MAILIO_INCLUDE_DIR: ${MAILIO_INCLUDE_DIR}")
+message(STATUS "MAILIO_LIB: ${MAILIO_LIB}")
 
 add_executable(${PROJECT_NAME} main.cpp)
 
-find_package(mailio CONFIG REQUIRED)
-target_link_libraries(${PROJECT_NAME} PRIVATE mailio)
+target_link_libraries(
+        ${PROJECT_NAME}
+        PRIVATE
+        OpenSSL::SSL
+        OpenSSL::Crypto
+        ${MAILIO_LIB}
+)
+
+target_include_directories(
+        ${PROJECT_NAME}
+        PUBLIC
+        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
+        PRIVATE
+        ${MAILIO_INCLUDE_DIR}
+)
