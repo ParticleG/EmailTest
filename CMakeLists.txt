@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.21)
+cmake_minimum_required(VERSION 3.18)
 
 include(utils.cmake)
 
@@ -25,11 +25,8 @@ elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
     add_compile_definitions(_CRT_SECURE_NO_WARNINGS NOMINMAX _WIN32_WINNT=${WIN32_WINNT})
 endif ()
 
+find_package(mailio CONFIG REQUIRED)
 find_package(OpenSSL REQUIRED)
-find_mailIO(MAILIO_INCLUDE_DIR MAILIO_LIB)
-
-message(STATUS "MAILIO_INCLUDE_DIR: ${MAILIO_INCLUDE_DIR}")
-message(STATUS "MAILIO_LIB: ${MAILIO_LIB}")
 
 add_executable(${PROJECT_NAME} main.cpp)
 
@@ -38,13 +35,11 @@ target_link_libraries(
         PRIVATE
         OpenSSL::SSL
         OpenSSL::Crypto
-        ${MAILIO_LIB}
+        mailio
 )
 
 target_include_directories(
         ${PROJECT_NAME}
         PUBLIC
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
-        PRIVATE
-        ${MAILIO_INCLUDE_DIR}
 )
